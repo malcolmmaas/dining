@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>Page Title</title>
+<script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>
 <script>
     // var transTable = $('#balance-trans').DataTable({
 	// 	"dom": '<t>p',
@@ -16,10 +17,124 @@
     //     await navigator.clipboard.writeText(JSON.stringify(transTable.rows().data())), 3000)
 
     function generatePlot() {
-        let x = document.forms["theform"]["copied"].value;
+        // console.log('thing')
+        // return false
+        b = document.forms['theform']
+        console.log('b')
+        d = document.forms["theform"]["copied"].value
+        console.log('d')
+        // return false
+        let x = JSON.parse(document.forms["theform"]["copied"].value)
+        console.log('DSKfhkjhfkgfdkfjdlkjhfsdhkuhlisdhkgjfkfc')
+        // return false
+        try {
 
-        console.log(x)
+            console.log(Object.values(x))
+            console.log(Object.values(x)[0])
+
+            traces = {
+                'Yahentamitsi': {
+                    x: [],
+                    y: [],
+                    mode: 'markers',
+                    type: 'scatter',
+                    name: 'Yahentamitsi',
+                    marker: { size: 12 }
+                },
+                '251': {
+                    x: [],
+                    y: [],
+                    mode: 'markers',
+                    type: 'scatter',
+                    name: '251',
+                    marker: { size: 12 }
+                },
+                'South': {
+                    x: [],
+                    y: [],
+                    mode: 'markers',
+                    type: 'scatter',
+                    name: 'South',
+                    marker: { size: 12 }
+                },
+            }
+
+            console.log('a')
+            Object.values(x).forEach((swipe) => {
+                swipe_loc = swipe[1]
+                // console.log('b')
+                console.log(swipe_loc)
+                if (swipe_loc != undefined) {
+
+                    date = new Date(swipe[2].substring(0,10) + 'T00:00:00')
+                    time = new Date('2022-12-14T' + swipe[2].substring(11,19))
+                    rough_time = time.getHours() + time.getMinutes()/60 + time.getSeconds()/3600
+
+                    if (swipe_loc.includes('Yahentamitsi') || swipe_loc.includes('Yahentamitsu')) {
+                        traces['Yahentamitsi']['x'].push(date)
+                        traces['Yahentamitsi']['y'].push(rough_time)
+                    } else if (swipe_loc.includes('251')) {
+                        traces['251']['x'].push(date)
+                        traces['251']['y'].push(rough_time)
+                    } else if (swipe_loc.includes('SDH')) {
+                        traces['South']['x'].push(date)
+                        traces['South']['y'].push(rough_time)
+                    }
+                }
+            })
+
+            console.log(traces)
+
+            var trace1 = {
+                x: [1, 2, 3, 4, 5],
+                y: [1, 6, 3, 6, 1],
+                mode: 'markers',
+                type: 'scatter',
+                name: 'Team A',
+                marker: { size: 12 }
+            };
+
+                var trace2 = {
+                x: [1.5, 2.5, 3.5, 4.5, 5.5],
+                y: [4, 1, 7, 1, 4],
+                mode: 'markers',
+                type: 'scatter',
+                name: 'Team B',
+                marker: { size: 12 }
+            };
+
+            var data = [traces['Yahentamitsi'], traces['251'], traces['South']];
+
+            var layout = {
+                // xaxis: {
+                //     range: [ 0.75, 5.25 ]
+                // },
+                // yaxis: {
+                //     range: [0, 24]
+                // },
+                title: 'Dining Hall Swipes'
+            };
+
+            Plotly.newPlot('plot', data, layout);
+        }
+        catch (err) {
+            console.log(err)
+            return false
+        }
+
+
+        // console.log(x)
+        // console.log(x['0'])
+        // console.log(Object.values(x))
         return false
+    }
+
+    function copyCode() {
+        navigator.clipboard.writeText(`
+            console.log('Press the tab key')
+            setTimeout(async()=>
+            await navigator.clipboard.writeText(JSON.stringify($('#balance-trans').DataTable().rows().data())), 3000)
+        `)
     }
 
 </script>
@@ -41,13 +156,18 @@
         await navigator.clipboard.writeText(JSON.stringify(transTable.rows().data())), 3000)
 
 </p>
+<form name="copyform" onsubmit="return copyCode()">
+    <input type="submit" value="submit">
+</form>
 
 
-<form name="theform" onsubmit="generatePlot(event)">
+<form name="theform" onsubmit="return generatePlot()">
     <label for="copied">Paste here:</label>
     <input type="text" id="copied" name="copied"><br><br>
     <input type="submit" value="submit">
 </form>
+
+<div id='plot'></div>
 
 </body>
 </html> 
