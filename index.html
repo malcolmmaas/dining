@@ -142,7 +142,35 @@
 <body>
 
 <!-- <h1>to paste</h1> -->
+
+<h3>
+    How to generate cool dining hall swipe plots:
+
+</h3>
+
 <p>
+
+</p>
+    <br>
+    Click 'Copy code' below.
+    <br>
+    <!-- Go to the <a href="https://dsonline2.umd.edu/dpmsonline/home.do">dining online services</a>.
+    <br>
+    Click "View Current Plan and Transactions".
+    <br> -->
+    Go to the <a href="https://dsonline2.umd.edu/dpmsonline/accountinfo.do">dining online services</a>.
+    <br>
+    By default, only the past week of swipes is shown on their site. If you want more, adjust the 'From' and 'To' dates, then click the search icon.
+    <br>
+    Press ctrl+shift+j.
+    <br>
+    Press ctrl+v to paste the code you copied.
+    <br>
+    Press enter and then press tab. Wait a couple seconds.
+    <br>
+    Your swipe data was just copied to your clipboard. Paste it below, where it says 'Paste here', then click 'Generate plot'.
+<p>
+
     console.log('Press the tab key')
             setTimeout(async()=>
             await navigator.clipboard.writeText(JSON.stringify($('#balance-trans').DataTable().rows().data())), 3000)
