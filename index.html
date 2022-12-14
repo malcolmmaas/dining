@@ -17,6 +17,7 @@
 
     function generatePlot() {
         let x = document.forms["theform"]["copied"].value;
+
         console.log(x)
     }
 
@@ -34,14 +35,14 @@
 		"bDestroy": true
 	});
     console.log('Press the tab key')
-    
+    </br>
     setTimeout(async()=>
         await navigator.clipboard.writeText(JSON.stringify(transTable.rows().data())), 3000)
 
 </p>
 
 
-<form name="theform" nsubmit="generatePlot(event)">
+<form name="theform" onsubmit="generatePlot(event)">
     <label for="copied">Paste here:</label>
     <input type="text" id="copied" name="copied"><br><br>
     <input type="submit" value="submit">
