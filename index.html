@@ -1,66 +1,52 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 <title>Page Title</title>
 <script>
-    // document.getElementById("demo").innerHTML = "My First JavaScript";
     // var transTable = $('#balance-trans').DataTable({
 	// 	"dom": '<t>p',
 	// 	"paging": false,
-	// 	//"info": false,
 	// 	"order": [[2, "desc"],
 	// 	  		 [0, "desc"]],
 	// 	"bDestroy": true
 	// });
-	// // console.log(transTable.rows().data())
-	// // console.log('KJFDHSKFDSJKFSDF')
     // console.log('Press the tab key')
     
     // setTimeout(async()=>
     //     await navigator.clipboard.writeText(JSON.stringify(transTable.rows().data())), 3000)
 
-    // console.log('bruh moment')
+    function generatePlot() {
+        let x = document.forms["theform"]["copied"].value;
+        console.log(x)
+    }
 
 </script>
 </head>
 <body>
 
-<h1>This is a Heading</h1>
-<p>This is a paragraph.</p>
+<h1>to paste</h1>
+<p>
+    var transTable = $('#balance-trans').DataTable({
+		"dom": '&lt;t&gt;p',
+		"paging": false,
+		"order": [[2, "desc"],
+		  		 [0, "desc"]],
+		"bDestroy": true
+	});
+    console.log('Press the tab key')
+    
+    setTimeout(async()=>
+        await navigator.clipboard.writeText(JSON.stringify(transTable.rows().data())), 3000)
+
+</p>
+
+
+<form name="theform" nsubmit="generatePlot(event)">
+    <label for="copied">Paste here:</label>
+    <input type="text" id="copied" name="copied"><br><br>
+    <input type="submit" value="submit">
+</form>
 
 </body>
 </html> 
--->
 
-
-
-<html>
- <head>
-    <title>Flask Intro - login page</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
-    <script type="text/javascript" src="http://code.jquery.com/jquery 2.1.4.min.js"></script>  
- </head>
- <body>
-    <input id="submitbutton" type="submit" value="Test Send Data">
-    <!----------------------------------->
-    <script type="text/javascript">
-
-    function runPyScript(input){
-        var jqXHR = $.ajax({
-            type: "POST",
-            url: "/login",
-            async: false,
-            data: { mydata: input }
-        });
-
-        return jqXHR.responseText;
-    }
-
-    $('#submitbutton').click(function(){
-        datatosend = 'this is my matrix';
-        result = runPyScript(datatosend);
-        console.log('Got back ' + result);
-    });
-
-</script>
