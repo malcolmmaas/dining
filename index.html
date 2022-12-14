@@ -141,30 +141,22 @@
 </head>
 <body>
 
-<h1>to paste</h1>
+<!-- <h1>to paste</h1> -->
 <p>
-    var transTable = $('#balance-trans').DataTable({
-		"dom": '&lt;t&gt;p',
-		"paging": false,
-		"order": [[2, "desc"],
-		  		 [0, "desc"]],
-		"bDestroy": true
-	});
     console.log('Press the tab key')
-    </br>
-    setTimeout(async()=>
-        await navigator.clipboard.writeText(JSON.stringify(transTable.rows().data())), 3000)
+            setTimeout(async()=>
+            await navigator.clipboard.writeText(JSON.stringify($('#balance-trans').DataTable().rows().data())), 3000)
 
 </p>
 <form name="copyform" onsubmit="return copyCode()">
-    <input type="submit" value="submit">
+    <input type="submit" value="Copy code">
 </form>
 
 
 <form name="theform" onsubmit="return generatePlot()">
     <label for="copied">Paste here:</label>
     <input type="text" id="copied" name="copied"><br><br>
-    <input type="submit" value="submit">
+    <input type="submit" value="Generate plot">
 </form>
 
 <div id='plot'></div>
