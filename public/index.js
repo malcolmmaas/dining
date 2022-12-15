@@ -25,7 +25,7 @@ const firebaseConfig = {
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-import { getDatabase, ref, child, get, set } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+import { getDatabase, ref, child, get, set, update } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 import "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -197,38 +197,64 @@ function copyCode() {
 
 
 function submitToDb() {
-    let x = JSON.parse(document.forms["theform"]["copied"].value)
-    console.log('DSKfhkjhfkgfdkfjdlkjhfsdhkuhlisdhkgjfkfc')
 
-
-    var cleanedSwipeList = []
-    Object.values(x['swipes']).forEach((swipe) => {
-        console.log(swipe)
-        var swipe_loc = swipe[1]
-        // console.log('b')
-        console.log(swipe_loc)
-        if (swipe_loc != undefined) {
-            cleanedSwipeList.push(swipe)
+    if (confirm('WARNING: By pressing OK, you acknowledge that you are allowing your swipe data to be viewed by anyone who comes to this website.')) {
+        let x = JSON.parse(document.forms["theform"]["copied"].value)
+    
+        var cleanedSwipes = {}
+        Object.values(x['swipes']).forEach((swipe) => {
+            console.log(swipe)
+            var swipe_loc = swipe[1]
+            // console.log('b')
+            console.log(swipe_loc)
+            if (swipe_loc != undefined) {
+                // var cleanSwipe = {}
+                // cleanSwipe[swipe[2]] = {
+                //     'location': swipe[1]
+                // }
+                cleanedSwipes[swipe[2].substring(0,swipe[2].length-2)] = {
+                    'location': swipe[1]
+                }
+            }
+        })
+    
+        var toSubmit = {
+            'name': x['name'],
+            'swipes': cleanedSwipes
         }
-    })
+    
+        console.log(toSubmit)
+    
+        update(ref(db, '/' + x['uid'] + '/swipes'), cleanedSwipes);
+        update(ref(db, '/' + x['uid']), {'name': x['name']});
+        // set(ref(db, '/'+x['uid']), toSubmit);
+    
+        return false
+    } else {return false}
+    
+    // let x = JSON.parse(document.forms["theform"]["copied"].value)
 
+    // var cleanedSwipeList = []
+    // Object.values(x['swipes']).forEach((swipe) => {
+    //     console.log(swipe)
+    //     var swipe_loc = swipe[1]
+    //     // console.log('b')
+    //     console.log(swipe_loc)
+    //     if (swipe_loc != undefined) {
+    //         cleanedSwipeList.push(swipe)
+    //     }
+    // })
 
+    // var toSubmit = {
+    //     'name': x['name'],
+    //     'swipes': Object.values(cleanedSwipeList)
+    // }
 
-    var toSubmit = {
-        'name': x['name'],
-        'swipes': Object.values(cleanedSwipeList)
-    }
+    // console.log(toSubmit)
 
-    console.log(toSubmit)
+    // set(ref(db, '/'+x['uid']), toSubmit);
 
-
-    set(ref(db, '/'+x['uid']), toSubmit);
-
-
-    // console.log(Object.values(x))
-    // console.log(Object.values(x)[0])
-
-    return false
+    // return false
 }
 
 function logData() {
