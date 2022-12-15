@@ -3,6 +3,10 @@
   <head>
     <link rel="icon" type="image/x-icon" href="https://aosc.umd.edu/sites/default/files/favicon%20%281%29.ico">
     <title>UMD Dining Swipe Plotter</title>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>
 
     <script type="module" src="index.js"></script>
@@ -66,7 +70,13 @@
         <!-- <input type="submit" value="Generate plot"> -->
         <button type="submit" onclick="generatePlot()">Generate plot</button>
         <button type="submit" onclick="submitToDb()">Submit to database</button>
+        <br>
+        <button type="submit" onclick="logData()">Log all data</button>
+        <br>
+        <input id="autocomplete" name="name" type="text"/><br>
+        <button type="submit" onclick="getData()">Get Data</button>
     </form>
+    
     
     <div id='plot'></div>
     

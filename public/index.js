@@ -36,18 +36,27 @@ const db = getDatabase(app);
 
 console.log(db)
 
+var allData = {}
+var names = []
+var uids = []
+
 const dbRef = ref(getDatabase());
-get(child(dbRef, 'test')).then((snapshot) => {
-  if (snapshot.exists()) {
-    console.log(snapshot.val());
-  } else {
-    console.log("No data available");
-  }
+get(child(dbRef, '/')).then((snapshot) => {
+    if (snapshot.exists()) {
+        allData = snapshot.val();
+        for (let key in allData) {
+            names.push(allData[key]['name']);
+            uids.push(key)
+        }
+        // console.log(allData)
+    } else {
+        console.log("No data available");
+    }
 }).catch((error) => {
-  console.error(error);
+    console.error(error);
 });
 
-
+// console.log(allData)
 
 function generatePlot() {
     // console.log('thing')
@@ -222,6 +231,94 @@ function submitToDb() {
     return false
 }
 
+function logData() {
+    console.log(allData)
+    console.log(names)
+    console.log(uids)
+}
+
+
+// var db2 = [
+//     "drawLine",
+//     "drawCircle",
+//     "drawCircleMore",
+//     "fillLine",
+//     "fillCircle",
+//     "fillCircleMore"
+// ];
+
+// function popupClearAndHide() {
+//     autocomplete_result.innerHTML = "";
+//     autocomplete_result.style.display = "none";
+// }
+
+// function updPopup() {
+//     if(!autocomplete.value) {
+//         popupClearAndHide();
+//         return;
+//     }
+//     var a = new RegExp("^" + autocomplete.value, "i");
+//     for(var x = 0, b = document.createDocumentFragment(), c = false; x < names.length; x++) {
+//         if(a.test(names[x])) {
+//             c = true;
+//             var d = document.createElement("p");
+//             d.innerText = names[x];
+//             d.setAttribute("onclick", "autocomplete.value=this.innerText;autocomplete_result.innerHTML='';autocomplete_result.style.display='none';");
+//             b.appendChild(d);
+//         }
+//     }
+//     if(c == true) {
+//         autocomplete_result.innerHTML = "";
+//         autocomplete_result.style.display = "block";
+//         autocomplete_result.appendChild(b);
+//         return;
+//     }
+//     popupClearAndHide();
+// }
+// autocomplete.addEventListener("keyup", updPopup);
+// autocomplete.addEventListener("change", updPopup);
+// autocomplete.addEventListener("focus", updPopup);
+
+
+$(function() {
+    var availableTags = [
+        "ActionScript",
+        "AppleScript",
+        "Asp",
+        "BASIC",
+        "C",
+        "C++",
+        "Clojure",
+        "COBOL",
+        "ColdFusion",
+        "Erlang",
+        "Fortran",
+        "Groovy",
+        "Haskell",
+        "Java",
+        "JavaScript",
+        "Lisp",
+        "Perl",
+        "PHP",
+        "Python",
+        "Ruby",
+        "Scala",
+        "Scheme"
+    ];
+    $("#autocomplete").autocomplete({
+        source: names
+    });
+});
+
+function getData() {
+    let x = document.forms["theform"]["name"].value
+    console.log(x)
+    console.log(allData[uids[names.indexOf(x)]])
+    // console.log(allData)
+}
+
 window.copyCode = copyCode
 window.generatePlot = generatePlot
 window.submitToDb = submitToDb
+window.logData = logData
+window.getData = getData
