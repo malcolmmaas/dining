@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Page Title</title>
+<link rel="icon" type="image/x-icon" href="https://aosc.umd.edu/sites/default/files/favicon%20%281%29.ico">
+<title>UMD Dining Swipe Plotter</title>
 <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>
 <script>
     // var transTable = $('#balance-trans').DataTable({
@@ -122,53 +123,46 @@
             return false
         }
 
-
-        // console.log(x)
-        // console.log(x['0'])
-        // console.log(Object.values(x))
         return false
     }
 
     function copyCode() {
         navigator.clipboard.writeText(`
-            console.log('Press the tab key')
+            console.log('QUICK! PRESS TAB!')
             setTimeout(async()=>
             await navigator.clipboard.writeText(JSON.stringify($('#balance-trans').DataTable().rows().data())), 3000)
         `)
+        document.getElementById('copyIndicator').innerHTML = 'Code copied!'
+        return false
     }
 
 </script>
 </head>
 <body>
 
-<!-- <h1>to paste</h1> -->
-
 <h3>
     How to generate cool dining hall swipe plots:
 
 </h3>
 
-<p>
 
 </p>
     <br>
-    Click 'Copy code' below.
+    Click "Copy code" below.
     <br>
-    <!-- Go to the <a href="https://dsonline2.umd.edu/dpmsonline/home.do">dining online services</a>.
+    Go to the <a href="https://dsonline2.umd.edu/dpmsonline/home.do" target="_blank">dining online services</a>.
     <br>
     Click "View Current Plan and Transactions".
-    <br> -->
-    Go to the <a href="https://dsonline2.umd.edu/dpmsonline/accountinfo.do">dining online services</a>.
     <br>
-    By default, only the past week of swipes is shown on their site. If you want more, adjust the 'From' and 'To' dates, then click the search icon.
+    By default, only the past week of swipes is shown in the table under "Balance Transactions". If you want more, adjust the "From" and "To" dates, then click the search icon. Wait for the page to load.
     <br>
-    Press ctrl+shift+j.
+    Press ctrl+shift+j. A bunch of stuff comes up; you can ignore it.
     <br>
     Press ctrl+v to paste the code you copied.
     <br>
-    Press enter and then press tab. Wait a couple seconds.
+    Press enter and then press tab. Wait a couple seconds. If a red error pops up, paste the code and try again.
     <br>
-    Your swipe data was just copied to your clipboard. Paste it below, where it says 'Paste here', then click 'Generate plot'.
+    Your swipe data was just copied to your clipboard. Paste it below, where it says "Paste here", then click "Generate plot".
 <p>
 
 <!--
@@ -176,12 +170,12 @@
             setTimeout(async()=>
             await navigator.clipboard.writeText(JSON.stringify($('#balance-trans').DataTable().rows().data())), 3000)
 -->
-</p>
 <form name="copyform" onsubmit="return copyCode()">
     <input type="submit" value="Copy code">
 </form>
-
-
+<span id='copyIndicator'></span>
+<br>
+<br>
 <form name="theform" onsubmit="return generatePlot()">
     <label for="copied">Paste here:</label>
     <input type="text" id="copied" name="copied"><br><br>
