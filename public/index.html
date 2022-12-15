@@ -19,11 +19,10 @@
     </script> -->
   </head>
 
-  <body>
+  <body style="font-family: Roboto,arial,sans-serif; line-height: 1.4;">
 
     <h3>
-        How to generate cool dining hall swipe plots:
-    
+      This page lets you plot your dining hall swipes and view swipe data of others who have opted in.<br>Follow the instructions below to get started.
     </h3>
     
     <!--
@@ -33,49 +32,31 @@
     
     -->
     
+    <h4>To plot your own data privately:</h4>
     
     </p>
-        <br>
-        Click "Copy code" below.
-        <br>
-        Go to the <a href="https://dsonline2.umd.edu/dpmsonline/home.do" target="_blank">dining online services</a>.
-        <br>
-        Click "View Current Plan and Transactions".
-        <br>
-        By default, only the past week of swipes is shown in the table under "Balance Transactions". If you want to change that, adjust the "From" and "To" dates, then click the search icon. Wait for the page to load.
-        <br>
-        On Windows, press ctrl+shift+j. On Mac, press command+option+j. A bunch of stuff comes up; you can ignore it.
-        <br>
-        On Windows, press ctrl+v. On Mac, press command+v. This pastes the code you copied.
-        <br>
-        Press enter and then press tab. Wait a couple seconds.
-        <br>
-        Your swipe data was just copied to your clipboard. Paste it below, where it says "Paste here", then click "Generate plot".
+        <ol>
+          <li>Click this button to copy a code snippet to your clipboard:
+            <button type="submit" onclick="copyCode()">Copy code</button>.
+            <span id='copyIndicator'></span></li>
+          <li>Go to the <a href="https://dsonline2.umd.edu/dpmsonline/home.do" target="_blank">UMD dining online services</a>.</li>
+          <li>Click "View Current Plan and Transactions".</li>
+          <li>By default, only the past week of swipes is shown in the table under "Balance Transactions". If you want to change that, adjust the "From" and "To" dates, then click the search icon. Wait for the page to load.</li>
+          <li>On Windows, press ctrl+shift+j. On Mac, press command+option+j. This brings up the console; you can ignore most of the stuff on it.</li>
+          <li>In the console: On Windows, press ctrl+v. On Mac, press command+v. This pastes the code you copied into the console.</li>
+          <li>Press enter and then press tab. Wait a couple seconds.</li>
+          <li>Hopefully, your name and associated swipe data was just copied to your clipboard. Paste it here: <br><input type="text" id="copied" name="copied" style="width: 100%;"></li>
+          <li>Then click here to plot the data you pasted: <button type="submit" onclick="generatePlot('from form')">Generate plot</button></li>
+          <li>If you want to submit your data to a database so other users can view it, click here: <button type="submit" onclick="submitToDb()">Submit to database</button></li>
+        </ol>
     <p>
     
-    <!--
-        console.log('Press the tab key')
-                setTimeout(async()=>
-                await navigator.clipboard.writeText(JSON.stringify($('#balance-trans').DataTable().rows().data())), 3000)
-    -->
-    <!-- <form name="copyform" onclick="copyCode()"> -->
-      <button type="submit" onclick="copyCode()">Copy code</button>
-    <!-- </form> -->
-    <span id='copyIndicator'></span>
+    <h4>To plot other users' data:</h4>
+    
+    Start typing someone's name below. If they have submitted their data to the database, you will be able to view it.
     <br>
-    <br>
-    <form name="theform" onsubmit="return false">
-        <label for="copied">Paste data here:</label>
-        <input type="text" id="copied" name="copied" style="width: 600px;"><br><br>
-        <!-- <input type="submit" value="Generate plot"> -->
-        <button type="submit" onclick="generatePlot()">Generate plot</button>
-        <button type="submit" onclick="submitToDb()">Submit to database</button>
-        <br>
-        <button type="submit" onclick="logData()">Log all data</button>
-        <br>
-        <input id="autocomplete" name="name" type="text"/><br>
-        <button type="submit" onclick="getData()">Get Data</button>
-    </form>
+    <input id="autocomplete" name="name" type="text"/><br>
+    <button type="submit" onclick="getData()">Get Data</button>
     
     
     <div id='plot'></div>
