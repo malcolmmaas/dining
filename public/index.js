@@ -66,7 +66,10 @@ function generatePlot(passedData) {
             mode: 'markers',
             type: 'scatter',
             name: 'Yahentamitsi',
-            marker: { size: 12 }
+            marker: {
+                size: 12,
+                color: 'rgba(31, 119, 180, 0.5)'
+            }
         },
         '251': {
             x: [],
@@ -74,7 +77,10 @@ function generatePlot(passedData) {
             mode: 'markers',
             type: 'scatter',
             name: '251',
-            marker: { size: 12 }
+            marker: {
+                size: 12,
+                color: 'rgba(255, 127, 14, 0.5)'
+            }
         },
         'South': {
             x: [],
@@ -82,7 +88,10 @@ function generatePlot(passedData) {
             mode: 'markers',
             type: 'scatter',
             name: 'South',
-            marker: { size: 12 }
+            marker: {
+                size: 12,
+                color: 'rgba(44, 160, 44, 0.5)'
+            }
         },
     }
 
@@ -216,6 +225,21 @@ $(function() {
     $("#autocomplete").autocomplete({
         source: names
     });
+    $("#compare1").autocomplete({
+        source: names
+    });
+    $("#compare2").autocomplete({
+        source: names
+    });
+    $("#compare3").autocomplete({
+        source: names
+    });
+    $("#compare4").autocomplete({
+        source: names
+    });
+    $("#compare5").autocomplete({
+        source: names
+    });
 });
 
 function getData() {
@@ -225,7 +249,113 @@ function getData() {
     generatePlot(allData[uids[names.indexOf(x)]])
 }
 
+function compare() {
+    let x = document.getElementById('autocomplete').value
+    let compares = [
+        x,
+        document.getElementById('compare1').value,
+        document.getElementById('compare2').value,
+        document.getElementById('compare3').value,
+        document.getElementById('compare4').value,
+        document.getElementById('compare5').value
+    ]
+
+    var uid_compares = []
+    compares.forEach((c) => {
+        if (c != '') {uid_compares.push(uids[names.indexOf(c)])}
+    })
+
+    var traces = {}
+
+    // 'Yahentamitsi': {
+    //     x: [],
+    //     y: [],
+    //     mode: 'markers',
+    //     type: 'scatter',
+    //     name: 'Yahentamitsi',
+    //     marker: {
+    //         size: 12,
+    //         color: 'rgba(31, 119, 180, 0.5)'
+    //     }
+    // },
+
+    uid_compares.forEach((c) => {
+        traces['Yahentamitsi'+c] = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Yahentamitsi'+names[uids.indexOf(c)],
+            marker: {
+                size: 12,
+                color: 'rgba(31, 119, 180, '+1/uid_compares.length+')'
+            }
+        }
+        traces['251'+c] = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: '251'+names[uids.indexOf(c)],
+            marker: {
+                size: 12,
+                color: 'rgba(255, 127, 14, '+1/uid_compares.length+')'
+            }
+        }
+        traces['South'+c] = {
+            x: [],
+            y: [],
+            mode: 'markers',
+            type: 'scatter',
+            name: 'South'+names[uids.indexOf(c)],
+            marker: {
+                size: 12,
+                color: 'rgba(44, 160, 44, '+1/uid_compares.length+')'
+            }
+        }
+        for (const [datetime, swipe] of Object.entries(allData[c]['swipes'])) {
+            var swipe_loc = swipe['location']
+            var date = new Date(datetime.substring(0,10) + 'T00:00:00')
+            var time = new Date('2022-12-14T' + datetime.substring(11,19))
+            var rough_time = time.getHours() + time.getMinutes()/60 + time.getSeconds()/3600
+            if (swipe_loc.includes('Yahentamitsi') || swipe_loc.includes('Yahentamitsu')) {
+                traces['Yahentamitsi'+c]['x'].push(date)
+                traces['Yahentamitsi'+c]['y'].push(rough_time)
+            } else if (swipe_loc.includes('251')) {
+                traces['251'+c]['x'].push(date)
+                traces['251'+c]['y'].push(rough_time)
+            } else if (swipe_loc.includes('SDH')) {
+                traces['South'+c]['x'].push(date)
+                traces['South'+c]['y'].push(rough_time)
+            }
+        }
+    })
+
+    console.log(traces)
+
+    // var data = [traces['Yahentamitsi'], traces['251'], traces['South']];
+    var data = Object.values(traces);
+
+    var layout = {
+        title: 'Dining Hall Swipes'
+    };
+
+    Plotly.newPlot('plot', data, layout);
+
+
+
+
+    compares.forEach((c) => {
+
+    })
+    console.log(x)
+    console.log(allData[uids[names.indexOf(x)]])
+    // generatePlot(allData[uids[names.indexOf(x)]])
+    return false
+}
+
 window.copyCode = copyCode
 window.generatePlot = generatePlot
 window.submitToDb = submitToDb
 window.getData = getData
+window.compare = compare

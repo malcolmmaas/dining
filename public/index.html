@@ -36,15 +36,15 @@
     
     </p>
         <ol>
-          <li>Click this button to copy a code snippet to your clipboard:
-            <button type="submit" onclick="copyCode()">Copy code</button>.
-            <span id='copyIndicator'></span></li>
           <li>Go to the <a href="https://dsonline2.umd.edu/dpmsonline/home.do" target="_blank">UMD dining online services</a>.</li>
           <li>Click "View Current Plan and Transactions".</li>
           <li>By default, only the past week of swipes is shown in the table under "Balance Transactions". If you want to change that, adjust the "From" and "To" dates, then click the search icon. Wait for the page to load.</li>
-          <li>On Windows, press ctrl+shift+j. On Mac, press command+option+j. This brings up the console; you can ignore most of the stuff on it.</li>
-          <li>In the console: On Windows, press ctrl+v. On Mac, press command+v. This pastes the code you copied into the console.</li>
-          <li>Press enter and then press tab. Wait a couple seconds.</li>
+          <li>On the same dining plan page, press ctrl+shift+J on Windows or command+option+J on Mac. This brings up the console; you can ignore most of the stuff on it.</li>
+          <li>Click this button to copy a code snippet to your clipboard:
+            <button type="submit" onclick="copyCode()">Copy code</button>.
+            <span id='copyIndicator'></span></li>
+          <li>Go back to the dining page. In the console, press ctrl+V on Windows or command+V on Mac. This pastes the code you copied into the console.</li>
+          <li>Press enter to run the code, then press tab. Wait a couple seconds.</li>
           <li>Hopefully, your name and associated swipe data was just copied to your clipboard. Paste it here: <br><input type="text" id="copied" name="copied" style="width: 100%;"></li>
           <li>Then click here to plot the data you pasted: <button type="submit" onclick="generatePlot('from form')">Generate plot</button></li>
           <li>If you want to submit your data to a database so other users can view it, click here: <button type="submit" onclick="submitToDb()">Submit to database</button></li>
@@ -52,11 +52,20 @@
     <p>
     
     <h4>To plot other users' data:</h4>
-    
+
     Start typing someone's name below. If they have submitted their data to the database, you will be able to view it.
     <br>
     <input id="autocomplete" name="name" type="text"/><br>
     <button type="submit" onclick="getData()">Get Data</button>
+    <br>
+    You can also compare your data with friends', to see how often you eat together. Enter up to 5 names below and click "Compare".
+    <br>
+    <input id="compare1" name="name1" type="text"/><br>
+    <input id="compare2" name="name2" type="text"/><br>
+    <input id="compare3" name="name3" type="text"/><br>
+    <input id="compare4" name="name4" type="text"/><br>
+    <input id="compare5" name="name5" type="text"/><br>
+    <button type="submit" onclick="compare()">Compare</button>
     
     
     <div id='plot'></div>
