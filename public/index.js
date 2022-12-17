@@ -211,6 +211,7 @@ function submitToDb() {
             update(ref(db, '/' + x['uid'] + '/swipes'), cleanedSwipes);
             update(ref(db, '/' + x['uid']), {'name': x['name']});
         
+            window.location.reload()
             return false
         } else {return false}
     } catch(e) {
