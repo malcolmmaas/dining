@@ -445,6 +445,44 @@ window.compare = compare
 
 
 
+// a1 = [1,4,9,14]
+// a2 = [1,3,9,16,17]
+// a3 = [2,4,9,12,17]
+// as = [a1,a2,a3]
+
+// a = {0:as[0]}
+// console.log(a)
+// for (let i = 1; i < as.length; i++) {
+//   a_old = structuredClone(a)
+//   for (const [index, sub_arr] of Object.entries(a)) {
+//     a[index + i.toString()] = []
+//   }
+
+//   a3_only = []
+//   as[i].forEach((dt2) => {
+//     overlap = false;
+//     for (const [index, sub_arr] of Object.entries(a_old)) {
+//       sub_arr.every((dt1) => {
+//         if (dt1 == dt2) {
+//           a[index + i.toString()].push(dt1)
+//           a[index].splice(a[index].indexOf(dt2), 1)
+//           overlap = true;
+//           return false
+//         } else return true
+//       })
+//     }
+//     if (!overlap) a3_only.push(dt2)
+//   })
+//   a[i] = a3_only
+// }
+// console.log(a)
+// console.log('aAAAAAAAAAAAAAAAAAAAAAAA')
+
+
+
+
+
+
 
 
 // a1 = [1,4,9,14]
