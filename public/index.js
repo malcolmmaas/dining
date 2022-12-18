@@ -442,3 +442,81 @@ window.generatePlot = generatePlot
 window.submitToDb = submitToDb
 window.getData = getData
 window.compare = compare
+
+
+
+
+
+// a1 = [1,4,9,14]
+// a2 = [1,3,9,16,17]
+// a3 = [2,4,9,12,17]
+
+// a = {1:a1}
+
+// a['1' + '2'] = []
+// a[2] = []
+// a2.forEach((dt2) => {
+// 	overlap = false;
+// 	a[1].every((dt1) => {
+//   	if (dt1 == dt2) {
+//     	a['1' + '2'].push(dt1)
+//       a[1].splice(a[1].indexOf(dt2), 1)
+//       overlap = true;
+//       return false
+//     } else return true
+//   })
+//   if (!overlap) a[2].push(dt2)
+// })
+
+// console.log(a)
+
+// a3_only = []
+// for (const [index, sub_arr] of Object.entries(a)) {
+//   a[index + '3'] = []
+//   a3.forEach((dt3) => {
+//     overlap = false;
+//     sub_arr.every((dt1) => {
+//       if (dt1 == dt3) {
+//         a[index + '3'].push(dt1)
+//         a[index].splice(sub_arr.indexOf(dt3), 1)
+//         overlap = true;
+//         return false
+//       } else return true
+//     })
+//     /*  if (!overlap) {
+//       if (3 in a) a[3].push(dt3)
+//       else a[3] = [dt3]
+//     } */
+//     if (!overlap && !a3_only.includes(dt3)) a3_only.push(dt3)
+//   })
+// }
+// a[3] = a3_only
+
+// /* a_old = a.slice()
+// for (const [index, sub_arr] of Object.entries(a)) {
+//   a[index + '3'] = []
+// }
+
+// console.log(a)
+// a3_only = []
+// a3.forEach((dt3) => {
+//   overlap = false;
+//   for (const [index, sub_arr] of Object.entries(a_old)) {
+//     sub_arr.every((dt1) => {
+//       if (dt1 == dt3) {
+//         a[index + '3'].push(dt1)
+//         a[index].splice(sub_arr.indexOf(dt3), 1)
+//         overlap = true;
+//         return false
+//       } else return true
+//     })
+//   }
+//   if (!overlap) {
+//       if (3 in a) a[3].push(dt3)
+//       else a[3] = [dt3]
+//      }
+//   if (!overlap) a3_only.push(dt3)
+// }) */
+
+
+// console.log(a)
