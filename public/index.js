@@ -68,6 +68,7 @@ function generatePlot(passedData) {
             name: 'Yahentamitsi',
             marker: {
                 size: 12,
+                symbol: 'circle',
                 color: 'rgba(31, 119, 180, 0.5)'
             }
         },
@@ -79,6 +80,7 @@ function generatePlot(passedData) {
             name: '251',
             marker: {
                 size: 12,
+                symbol: 'triangle-up',
                 color: 'rgba(255, 127, 14, 0.5)'
             }
         },
@@ -90,6 +92,7 @@ function generatePlot(passedData) {
             name: 'South',
             marker: {
                 size: 12,
+                symbol: 'square',
                 color: 'rgba(44, 160, 44, 0.5)'
             }
         },
@@ -280,7 +283,26 @@ function compare() {
     //     }
     // },
 
+    var colors = [
+        'rgba(255, 0, 0, '+1/uid_compares.length+')',
+        'rgba(0, 255, 0, '+1/uid_compares.length+')',
+        'rgba(0, 0, 255, '+1/uid_compares.length+')',
+        'rgba(255, 255, 0, '+1/uid_compares.length+')',
+        'rgba(255, 0, 255, '+1/uid_compares.length+')',
+        'rgba(0, 255, 255, '+1/uid_compares.length+')',
+    ]
+
+    // var colors = [
+    //     'rgba(31, 119, 180, '+1/uid_compares.length+')',
+    //     'rgba(255, 127, 14, '+1/uid_compares.length+')',
+    //     'rgba(44, 160, 44, '+1/uid_compares.length+')',
+    //     'rgba(255, 127, 14, '+1/uid_compares.length+')',
+    //     'rgba(255, 127, 14, '+1/uid_compares.length+')',
+    //     'rgba(255, 127, 14, '+1/uid_compares.length+')',
+    // ]
+
     uid_compares.forEach((c) => {
+        var color = colors[uid_compares.indexOf(c)]
         traces['Yahentamitsi'+c] = {
             x: [],
             y: [],
@@ -289,7 +311,8 @@ function compare() {
             name: 'Yahentamitsi'+names[uids.indexOf(c)],
             marker: {
                 size: 12,
-                color: 'rgba(31, 119, 180, '+1/uid_compares.length+')'
+                symbol: 'circle',
+                color: color
             }
         }
         traces['251'+c] = {
@@ -300,7 +323,8 @@ function compare() {
             name: '251'+names[uids.indexOf(c)],
             marker: {
                 size: 12,
-                color: 'rgba(255, 127, 14, '+1/uid_compares.length+')'
+                symbol: 'triangle-up',
+                color: color
             }
         }
         traces['South'+c] = {
@@ -311,7 +335,8 @@ function compare() {
             name: 'South'+names[uids.indexOf(c)],
             marker: {
                 size: 12,
-                color: 'rgba(44, 160, 44, '+1/uid_compares.length+')'
+                symbol: 'square',
+                color: color
             }
         }
         for (const [datetime, swipe] of Object.entries(allData[c]['swipes'])) {
