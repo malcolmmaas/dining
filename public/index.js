@@ -269,6 +269,63 @@ function compare() {
         if (c != '') {uid_compares.push(uids[names.indexOf(c)])}
     })
 
+    relevSwipeDatetimes = []
+    uid_compares.forEach((u) => {
+        relevSwipeDatetimes.push(Object.keys(allData[u]['swipes']))
+    })
+
+    var overlaps = []
+
+    var comparisons = [];
+    var temp = [];
+    var slent = Math.pow(2, uid_compares.length);
+
+    for (var i = 0; i < slent; i++) {
+        temp = [];
+        for (var j = 0; j < uid_compares.length; j++) {
+            if ((i & Math.pow(2, j))) {
+                temp.push(uid_compares[j]);
+            }
+        }
+        if (temp.length > 1) {
+            comparisons.push(temp);
+        }
+    }
+
+    console.log('[[[[[[[[[[[[[[[[[[[[[[')
+    console.log(comparisons)
+
+    function findOverlaps(uid_group) {
+        if (c_arr.length == 2) {
+            relevSwipeDatetimes[uid_compares.indexOf(c_arr[0])].forEach((dt1) => {
+                relevSwipeDatetimes[uid_compares.indexOf(c_arr[1])].forEach((dt2) => {
+                    if (Math.abs(dt2-dt1) < 30000) {
+                        
+                    }
+                })
+            })
+        } else {
+            uid_group.forEach((u) => {
+                console.log(uid_group.splice(uid_group.indexOf(u), 1))
+                findOverlaps(uid_group.splice(uid_group.indexOf(u), 1))
+            })
+            
+        }
+    }
+
+    findOverlaps(uid_compares)
+
+    // comparisons.forEach((c_arr) => {
+    //     overlaps.push(findOverlaps(c_arr))
+    // })
+
+    // var comparisons = []
+    // uid_compares.forEach((u, i) => {
+    //     if (i>0) {comparisons.push(u)}
+    //     comparisons.push([])
+    // })
+
+
     var traces = {}
 
     // 'Yahentamitsi': {
@@ -323,7 +380,7 @@ function compare() {
             name: '251'+names[uids.indexOf(c)],
             marker: {
                 size: 12,
-                symbol: 'triangle-up',
+                symbol: 'diamond',
                 color: color
             }
         }
