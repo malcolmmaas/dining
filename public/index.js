@@ -63,37 +63,46 @@ function generatePlot(passedData) {
         'Yahentamitsi': {
             x: [],
             y: [],
+            text: [],
             mode: 'markers',
             type: 'scatter',
-            name: 'Yahentamitsi',
+            hovertemplate: '%{x}' +
+            '<br>%{text}',
+            name: '',
             marker: {
                 size: 12,
                 symbol: 'circle',
-                color: 'rgba(31, 119, 180, 0.5)'
+                color: 'rgba(31, 119, 180, 1)'
             }
         },
         '251': {
             x: [],
             y: [],
+            text: [],
             mode: 'markers',
             type: 'scatter',
-            name: '251',
+            hovertemplate: '%{x}' +
+            '<br>%{text}',
+            name: '',
             marker: {
                 size: 12,
-                symbol: 'triangle-up',
-                color: 'rgba(255, 127, 14, 0.5)'
+                symbol: 'diamond',
+                color: 'rgba(255, 127, 14, 1)'
             }
         },
         'South': {
             x: [],
             y: [],
+            text: [],
             mode: 'markers',
             type: 'scatter',
-            name: 'South',
+            hovertemplate: '%{x}' +
+            '<br>%{text}',
+            name: '',
             marker: {
                 size: 12,
                 symbol: 'square',
-                color: 'rgba(44, 160, 44, 0.5)'
+                color: 'rgba(44, 160, 44, 1)'
             }
         },
     }
@@ -132,18 +141,26 @@ function generatePlot(passedData) {
     for (const [datetime, swipe] of Object.entries(passedData['swipes'])) {
         var swipe_loc = swipe['location']
         var date = new Date(datetime.substring(0,10) + 'T00:00:00')
+        // console.log(datetime)
+        // console.log(datetime.substring(11,19))
         var time = new Date('2022-12-14T' + datetime.substring(11,19))
         var rough_time = time.getHours() + time.getMinutes()/60 + time.getSeconds()/3600
+        // console.log(rough_time)
+        // console.log(time.getMinutes())
+        // console.log(time.getSeconds())
 
         if (swipe_loc.includes('Yahentamitsi') || swipe_loc.includes('Yahentamitsu')) {
             traces['Yahentamitsi']['x'].push(date)
             traces['Yahentamitsi']['y'].push(rough_time)
+            traces['Yahentamitsi']['text'].push(time.getHours() + ':' + String(time.getMinutes()).padStart(2, '0') + ':' + String(time.getSeconds()).padStart(2, '0'))
         } else if (swipe_loc.includes('251')) {
             traces['251']['x'].push(date)
             traces['251']['y'].push(rough_time)
+            traces['251']['text'].push(time.getHours() + ':' + String(time.getMinutes()).padStart(2, '0') + ':' + String(time.getSeconds()).padStart(2, '0'))
         } else if (swipe_loc.includes('SDH')) {
             traces['South']['x'].push(date)
             traces['South']['y'].push(rough_time)
+            traces['South']['text'].push(time.getHours() + ':' + String(time.getMinutes()).padStart(2, '0') + ':' + String(time.getSeconds()).padStart(2, '0'))
         }
     }
 
@@ -152,12 +169,14 @@ function generatePlot(passedData) {
     var data = [traces['Yahentamitsi'], traces['251'], traces['South']];
 
     var layout = {
-        // xaxis: {
-        //     range: [ 0.75, 5.25 ]
-        // },
-        // yaxis: {
-        //     range: [0, 24]
-        // },
+        yaxis: {
+            range: [6, 22],
+            title: 'Time of day'
+        },
+        xaxis: {
+            title: 'Date'
+        },
+        legend: {"orientation": "h"},
         title: 'Dining Hall Swipes'
     };
 
@@ -269,51 +288,91 @@ function compare() {
         if (c != '') {uid_compares.push(uids[names.indexOf(c)])}
     })
 
-    relevSwipeDatetimes = []
+    var relevSwipeDatetimes = []
     uid_compares.forEach((u) => {
         relevSwipeDatetimes.push(Object.keys(allData[u]['swipes']))
     })
 
-    var overlaps = []
+    console.log('........................................')
+    console.log(relevSwipeDatetimes)
+    
+    var combinations = {}
+    combinations[0] = relevSwipeDatetimes[0]
+    console.log(combinations)
 
-    var comparisons = [];
-    var temp = [];
-    var slent = Math.pow(2, uid_compares.length);
-
-    for (var i = 0; i < slent; i++) {
-        temp = [];
-        for (var j = 0; j < uid_compares.length; j++) {
-            if ((i & Math.pow(2, j))) {
-                temp.push(uid_compares[j]);
-            }
+    for (let i = 1; i < relevSwipeDatetimes.length; i++) {
+      var combinations_old = structuredClone(combinations)
+      for (const [index, sub_arr] of Object.entries(combinations)) {
+        combinations[index + i.toString()] = []
+      }
+    
+      var solos = []
+      relevSwipeDatetimes[i].forEach((dt2) => {
+        var overlap = false;
+        for (const [index, sub_arr] of Object.entries(combinations_old)) {
+          sub_arr.every((dt1) => {
+            if (dt1 == dt2) {
+              combinations[index + i.toString()].push(dt1)
+              combinations[index].splice(combinations[index].indexOf(dt2), 1)
+              overlap = true;
+              return false
+            } else return true
+          })
         }
-        if (temp.length > 1) {
-            comparisons.push(temp);
-        }
+        if (!overlap) solos.push(dt2)
+      })
+      combinations[i] = solos
     }
+    console.log(uid_compares)
+    console.log(combinations)
+    console.log('aAAAAAAAAAAAAAAAAAAAAAAA')
 
-    console.log('[[[[[[[[[[[[[[[[[[[[[[')
-    console.log(comparisons)
 
-    function findOverlaps(uid_group) {
-        if (c_arr.length == 2) {
-            relevSwipeDatetimes[uid_compares.indexOf(c_arr[0])].forEach((dt1) => {
-                relevSwipeDatetimes[uid_compares.indexOf(c_arr[1])].forEach((dt2) => {
-                    if (Math.abs(dt2-dt1) < 30000) {
+
+
+
+
+
+    // var overlaps = []
+
+    // var comparisons = [];
+    // var temp = [];
+    // var slent = Math.pow(2, uid_compares.length);
+
+    // for (var i = 0; i < slent; i++) {
+    //     temp = [];
+    //     for (var j = 0; j < uid_compares.length; j++) {
+    //         if ((i & Math.pow(2, j))) {
+    //             temp.push(uid_compares[j]);
+    //         }
+    //     }
+    //     if (temp.length > 1) {
+    //         comparisons.push(temp);
+    //     }
+    // }
+
+    // console.log('[[[[[[[[[[[[[[[[[[[[[[')
+    // console.log(comparisons)
+
+    // function findOverlaps(uid_group) {
+    //     if (c_arr.length == 2) {
+    //         relevSwipeDatetimes[uid_compares.indexOf(c_arr[0])].forEach((dt1) => {
+    //             relevSwipeDatetimes[uid_compares.indexOf(c_arr[1])].forEach((dt2) => {
+    //                 if (Math.abs(dt2-dt1) < 30000) {
                         
-                    }
-                })
-            })
-        } else {
-            uid_group.forEach((u) => {
-                console.log(uid_group.splice(uid_group.indexOf(u), 1))
-                findOverlaps(uid_group.splice(uid_group.indexOf(u), 1))
-            })
+    //                 }
+    //             })
+    //         })
+    //     } else {
+    //         uid_group.forEach((u) => {
+    //             console.log(uid_group.splice(uid_group.indexOf(u), 1))
+    //             findOverlaps(uid_group.splice(uid_group.indexOf(u), 1))
+    //         })
             
-        }
-    }
+    //     }
+    // }
 
-    findOverlaps(uid_compares)
+    // findOverlaps(uid_compares)
 
     // comparisons.forEach((c_arr) => {
     //     overlaps.push(findOverlaps(c_arr))
@@ -327,18 +386,6 @@ function compare() {
 
 
     var traces = {}
-
-    // 'Yahentamitsi': {
-    //     x: [],
-    //     y: [],
-    //     mode: 'markers',
-    //     type: 'scatter',
-    //     name: 'Yahentamitsi',
-    //     marker: {
-    //         size: 12,
-    //         color: 'rgba(31, 119, 180, 0.5)'
-    //     }
-    // },
 
     var colors = [
         'rgba(255, 0, 0, '+1/uid_compares.length+')',
@@ -363,9 +410,12 @@ function compare() {
         traces['Yahentamitsi'+c] = {
             x: [],
             y: [],
+            text: [],
             mode: 'markers',
             type: 'scatter',
-            name: 'Yahentamitsi'+names[uids.indexOf(c)],
+            hovertemplate: '%{x}' +
+            '<br>%{text}',
+            name: '',
             marker: {
                 size: 12,
                 symbol: 'circle',
@@ -375,9 +425,12 @@ function compare() {
         traces['251'+c] = {
             x: [],
             y: [],
+            text: [],
             mode: 'markers',
             type: 'scatter',
-            name: '251'+names[uids.indexOf(c)],
+            hovertemplate: '%{x}' +
+            '<br>%{text}',
+            name: '',
             marker: {
                 size: 12,
                 symbol: 'diamond',
@@ -387,9 +440,12 @@ function compare() {
         traces['South'+c] = {
             x: [],
             y: [],
+            text: [],
             mode: 'markers',
             type: 'scatter',
-            name: 'South'+names[uids.indexOf(c)],
+            hovertemplate: '%{x}' +
+            '<br>%{text}',
+            name: '',
             marker: {
                 size: 12,
                 symbol: 'square',
@@ -404,12 +460,15 @@ function compare() {
             if (swipe_loc.includes('Yahentamitsi') || swipe_loc.includes('Yahentamitsu')) {
                 traces['Yahentamitsi'+c]['x'].push(date)
                 traces['Yahentamitsi'+c]['y'].push(rough_time)
+                traces['Yahentamitsi'+c]['text'].push(time.getHours() + ':' + String(time.getMinutes()).padStart(2, '0') + ':' + String(time.getSeconds()).padStart(2, '0'))
             } else if (swipe_loc.includes('251')) {
                 traces['251'+c]['x'].push(date)
                 traces['251'+c]['y'].push(rough_time)
+                traces['251'+c]['text'].push(time.getHours() + ':' + String(time.getMinutes()).padStart(2, '0') + ':' + String(time.getSeconds()).padStart(2, '0'))
             } else if (swipe_loc.includes('SDH')) {
                 traces['South'+c]['x'].push(date)
                 traces['South'+c]['y'].push(rough_time)
+                traces['South'+c]['text'].push(time.getHours() + ':' + String(time.getMinutes()).padStart(2, '0') + ':' + String(time.getSeconds()).padStart(2, '0'))
             }
         }
     })
@@ -420,6 +479,14 @@ function compare() {
     var data = Object.values(traces);
 
     var layout = {
+        yaxis: {
+            range: [6, 22],
+            title: 'Time of day'
+        },
+        xaxis: {
+            title: 'Date'
+        },
+        legend: {"orientation": "h"},
         title: 'Dining Hall Swipes'
     };
 

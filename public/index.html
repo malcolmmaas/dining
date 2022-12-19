@@ -31,16 +31,19 @@
         <ol>
           <li>Go to the <a href="https://dsonline2.umd.edu/dpmsonline/home.do" target="_blank">UMD dining online services</a>.</li>
           <li>Click "View Current Plan and Transactions".</li>
-          <li>By default, only the past week of swipes is shown in the table under "Balance Transactions". If you want to change that, adjust the "From" and "To" dates, then click the search icon. Wait for the page to load.</li>
+          <li>By default, <b>only the past week</b> of swipes is shown in the table under "Balance Transactions". If you want to change that, <b>adjust the "From" and "To" dates, then click the search icon</b>. Wait for the page to load.</li>
           <li>On the same dining plan page, press ctrl+shift+J on Windows or command+option+J on Mac. This brings up the console; you can ignore most of the stuff on it.</li>
           <li>Click this button to copy a code snippet to your clipboard:
             <button type="submit" onclick="copyCode()">Copy code</button>.
             <span id='copyIndicator'></span></li>
           <li>Go back to the dining page. In the console, press ctrl+V on Windows or command+V on Mac. This pastes the code you copied into the console.</li>
-          <li>Press enter to run the code, then press tab. Wait a couple seconds.</li>
+          <li>Press <b>enter</b> to run the code, then press <b>tab</b>. Wait a couple seconds.</li>
           <li>Hopefully, your name and associated swipe data was just copied to your clipboard. Paste it here: <br><input type="text" id="copied" name="copied" style="width: 100%;"></li>
           <li>Then click here to plot the data you pasted: <button type="submit" onclick="generatePlot('from form')">Generate plot</button></li>
           <li>If you want to submit your data to a database so other users can view it, click here: <button type="submit" onclick="submitToDb()">Submit to database</button></li>
+          <li>Submitting your data allows you to compare it with others'. It also means you can come back to this site later and won't have to re-copy your data.
+            However, your data does not update automatically - you will need to copy any new swipes you have from the dining services website.
+          </li>
         </ol>
     <p>
     
@@ -51,7 +54,7 @@
     <input id="autocomplete" name="name" type="text"/><br>
     <button type="submit" onclick="getData()">Get Data</button>
     <br>
-    You can also compare your data with friends', to see how often you eat together. Enter up to 5 names below and click "Compare".
+    You can also compare your data with friends', to see how often you eat together. Enter up to 5 other names below and click "Compare" (the name in the box above is included in the comparison).
     <br>
     <input id="compare1" name="name1" type="text"/><br>
     <input id="compare2" name="name2" type="text"/><br>
