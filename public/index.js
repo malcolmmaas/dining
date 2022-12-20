@@ -180,7 +180,7 @@ function generatePlot(passedData) {
         title: 'Dining Hall Swipes'
     };
 
-    Plotly.newPlot('plot', data, layout);
+    Plotly.newPlot('plot1', data, layout);
 
     return false
 }
@@ -290,100 +290,77 @@ function compare() {
 
     var relevSwipeDatetimes = []
     uid_compares.forEach((u) => {
-        relevSwipeDatetimes.push(Object.keys(allData[u]['swipes']))
+        console.log(allData[u]['swipes'])
+        relevSwipeDatetimes.push(Object.entries(allData[u]['swipes']).map(function([dt, swipe]) {
+            var swipe_loc = swipe['location']
+            if (swipe_loc.includes('Yahentamitsi') || swipe_loc.includes('Yahentamitsu')) swipe_loc = 'Yahentamitsi'
+            else if (swipe_loc.includes('251')) swipe_loc = '251'
+            else if (swipe_loc.includes('SDH')) swipe_loc = 'South'
+            else return null
+            return {
+                'date': new Date(dt),
+                'location': swipe_loc
+            }
+        }).filter(s => s != null))
+        console.log(structuredClone(relevSwipeDatetimes[0]))
     })
 
     console.log('........................................')
-    console.log(relevSwipeDatetimes)
+    console.log(structuredClone(relevSwipeDatetimes))
     
     var combinations = {}
     combinations[0] = relevSwipeDatetimes[0]
-    console.log(combinations)
+    console.log(structuredClone(combinations))
 
     for (let i = 1; i < relevSwipeDatetimes.length; i++) {
-      var combinations_old = structuredClone(combinations)
-      for (const [index, sub_arr] of Object.entries(combinations)) {
-        combinations[index + i.toString()] = []
-      }
-    
-      var solos = []
-      relevSwipeDatetimes[i].forEach((dt2) => {
-        var overlap = false;
-        for (const [index, sub_arr] of Object.entries(combinations_old)) {
-          sub_arr.every((dt1) => {
-            if (dt1 == dt2) {
-              combinations[index + i.toString()].push(dt1)
-              combinations[index].splice(combinations[index].indexOf(dt2), 1)
-              overlap = true;
-              return false
-            } else return true
-          })
+        var combinations_old = structuredClone(combinations)
+        for (const [index, sub_arr] of Object.entries(combinations)) {
+            combinations[index + i.toString()] = []
         }
-        if (!overlap) solos.push(dt2)
-      })
-      combinations[i] = solos
+        
+        var solos = []
+        relevSwipeDatetimes[i].forEach((swipe2) => {
+            var dt2 = swipe2['date']
+            var loc2 = swipe2['location']
+            var overlap = false;
+            for (const [index, sub_arr] of Object.entries(combinations_old)) {
+                sub_arr.every((swipe1) => {
+                    var dt1 = swipe1['date']
+                    var loc1 = swipe1['location']
+                    // console.log(Math.abs(dt1 - dt2))
+                    if (Math.abs(dt1 - dt2) < 30000 && loc1 == loc2) {
+                        if (dt1 - dt2 < 0) {
+                            combinations[index + i.toString()].push(swipe1)
+                            combinations[index].splice(combinations[index].findIndex(q => q['date'].toString() == swipe1['date'].toString()), 1)
+                        } else {
+                            combinations[index + i.toString()].push(swipe2)
+                            combinations[index].splice(combinations[index].findIndex(q => q['date'].toString() == swipe1['date'].toString()), 1)
+                        }
+                        // console.log(swipe1['date'])
+                        // console.log(structuredClone(combinations[index]))
+                        // console.log(combinations[index].findIndex(q => q['date'].toString() == swipe1['date'].toString()))
+                        overlap = true;
+                        return false
+                    } else return true
+                })
+            }
+            if (!overlap) solos.push(swipe2)
+        })
+        combinations[i] = solos
     }
     console.log(uid_compares)
     console.log(combinations)
     console.log('aAAAAAAAAAAAAAAAAAAAAAAA')
 
-
-
-
-
-
-
-    // var overlaps = []
-
-    // var comparisons = [];
-    // var temp = [];
-    // var slent = Math.pow(2, uid_compares.length);
-
-    // for (var i = 0; i < slent; i++) {
-    //     temp = [];
-    //     for (var j = 0; j < uid_compares.length; j++) {
-    //         if ((i & Math.pow(2, j))) {
-    //             temp.push(uid_compares[j]);
-    //         }
-    //     }
-    //     if (temp.length > 1) {
-    //         comparisons.push(temp);
-    //     }
-    // }
-
-    // console.log('[[[[[[[[[[[[[[[[[[[[[[')
-    // console.log(comparisons)
-
-    // function findOverlaps(uid_group) {
-    //     if (c_arr.length == 2) {
-    //         relevSwipeDatetimes[uid_compares.indexOf(c_arr[0])].forEach((dt1) => {
-    //             relevSwipeDatetimes[uid_compares.indexOf(c_arr[1])].forEach((dt2) => {
-    //                 if (Math.abs(dt2-dt1) < 30000) {
-                        
-    //                 }
-    //             })
-    //         })
-    //     } else {
-    //         uid_group.forEach((u) => {
-    //             console.log(uid_group.splice(uid_group.indexOf(u), 1))
-    //             findOverlaps(uid_group.splice(uid_group.indexOf(u), 1))
-    //         })
-            
-    //     }
-    // }
-
-    // findOverlaps(uid_compares)
-
-    // comparisons.forEach((c_arr) => {
-    //     overlaps.push(findOverlaps(c_arr))
-    // })
-
-    // var comparisons = []
-    // uid_compares.forEach((u, i) => {
-    //     if (i>0) {comparisons.push(u)}
-    //     comparisons.push([])
-    // })
-
+    var indexNameMap = {}
+    Object.keys(combinations).forEach((index) => {
+        var relevNames = []
+        for (const c of index.toString()) {
+            relevNames.push(names[uids.indexOf(uid_compares[c])])
+        }
+        indexNameMap[index] = relevNames
+    })
+    console.log(indexNameMap)
 
     var traces = {}
 
@@ -395,15 +372,6 @@ function compare() {
         'rgba(255, 0, 255, '+1/uid_compares.length+')',
         'rgba(0, 255, 255, '+1/uid_compares.length+')',
     ]
-
-    // var colors = [
-    //     'rgba(31, 119, 180, '+1/uid_compares.length+')',
-    //     'rgba(255, 127, 14, '+1/uid_compares.length+')',
-    //     'rgba(44, 160, 44, '+1/uid_compares.length+')',
-    //     'rgba(255, 127, 14, '+1/uid_compares.length+')',
-    //     'rgba(255, 127, 14, '+1/uid_compares.length+')',
-    //     'rgba(255, 127, 14, '+1/uid_compares.length+')',
-    // ]
 
     uid_compares.forEach((c) => {
         var color = colors[uid_compares.indexOf(c)]
@@ -475,7 +443,6 @@ function compare() {
 
     console.log(traces)
 
-    // var data = [traces['Yahentamitsi'], traces['251'], traces['South']];
     var data = Object.values(traces);
 
     var layout = {
@@ -490,17 +457,139 @@ function compare() {
         title: 'Dining Hall Swipes'
     };
 
-    Plotly.newPlot('plot', data, layout);
+    Plotly.newPlot('plot1', data, layout);
 
 
 
 
-    compares.forEach((c) => {
 
-    })
+
+    var traces = {}
+
+    var colors = [
+        'rgba(255, 0, 0, 1)',
+        'rgba(0, 255, 0, 1)',
+        'rgba(0, 0, 255, 1)',
+        'rgba(255, 255, 0, 1)',
+        'rgba(255, 0, 255, 1)',
+        'rgba(0, 255, 255, 1)',
+        'rgba(0, 0, 0, 1)'
+    ]
+
+    var j = 0
+    for (const [indices, swipes] of Object.entries(combinations)) {
+    // comparisons.forEach((c, i) => {
+        var color = colors[j]
+        console.log(color)
+        traces['Yahentamitsi'+indices] = {
+            x: [],
+            y: [],
+            text: [],
+            mode: 'markers',
+            type: 'scatter',
+            hovertemplate: '%{x}' +
+            '<br>%{text}',
+            name: '',
+            marker: {
+                size: 12,
+                symbol: 'circle',
+                color: color
+            }
+        }
+        traces['251'+indices] = {
+            x: [],
+            y: [],
+            text: [],
+            mode: 'markers',
+            type: 'scatter',
+            hovertemplate: '%{x}' +
+            '<br>%{text}',
+            name: '',
+            marker: {
+                size: 12,
+                symbol: 'diamond',
+                color: color
+            }
+        }
+        traces['South'+indices] = {
+            x: [],
+            y: [],
+            text: [],
+            mode: 'markers',
+            type: 'scatter',
+            hovertemplate: '%{x}' +
+            '<br>%{text}',
+            name: '',
+            marker: {
+                size: 12,
+                symbol: 'square',
+                color: color
+            }
+        }
+        swipes.forEach((swipe) => {
+            var swipe_loc = swipe['location']
+            var datetime = swipe['date']
+            var date = new Date(datetime)
+            date.setHours(0,0,0,0)
+            var time = new Date(datetime)
+            time.setFullYear(2022, 12, 14)
+            // console.log(swipe_loc)
+            var rough_time = time.getHours() + time.getMinutes()/60 + time.getSeconds()/3600
+            if (swipe_loc + indices in traces) {
+                traces[swipe_loc + indices]['x'].push(date)
+                traces[swipe_loc + indices]['y'].push(rough_time)
+                traces[swipe_loc + indices]['text'].push(time.getHours() + ':' + String(time.getMinutes()).padStart(2, '0') + ':' + String(time.getSeconds()).padStart(2, '0')
+                                                        + '<br>' + indexNameMap[indices].join(', '))
+            }
+        })
+        j++;
+        // for (const [datetime, swipe] of Object.entries(allData[c]['swipes'])) {
+        //     var swipe_loc = swipe['location']
+        //     var date = new Date(datetime.substring(0,10) + 'T00:00:00')
+        //     var time = new Date('2022-12-14T' + datetime.substring(11,19))
+        //     var rough_time = time.getHours() + time.getMinutes()/60 + time.getSeconds()/3600
+        //     if (swipe_loc.includes('Yahentamitsi') || swipe_loc.includes('Yahentamitsu')) {
+        //         traces['Yahentamitsi'+c]['x'].push(date)
+        //         traces['Yahentamitsi'+c]['y'].push(rough_time)
+        //         traces['Yahentamitsi'+c]['text'].push(time.getHours() + ':' + String(time.getMinutes()).padStart(2, '0') + ':' + String(time.getSeconds()).padStart(2, '0'))
+        //     } else if (swipe_loc.includes('251')) {
+        //         traces['251'+c]['x'].push(date)
+        //         traces['251'+c]['y'].push(rough_time)
+        //         traces['251'+c]['text'].push(time.getHours() + ':' + String(time.getMinutes()).padStart(2, '0') + ':' + String(time.getSeconds()).padStart(2, '0'))
+        //     } else if (swipe_loc.includes('SDH')) {
+        //         traces['South'+c]['x'].push(date)
+        //         traces['South'+c]['y'].push(rough_time)
+        //         traces['South'+c]['text'].push(time.getHours() + ':' + String(time.getMinutes()).padStart(2, '0') + ':' + String(time.getSeconds()).padStart(2, '0'))
+        //     }
+        // }
+    }
+
+    console.log(traces)
+
+    var data = Object.values(traces);
+
+    var layout = {
+        yaxis: {
+            range: [6, 22],
+            title: 'Time of day'
+        },
+        xaxis: {
+            title: 'Date'
+        },
+        legend: {"orientation": "h"},
+        title: 'Dining Hall Swipes'
+    };
+
+    Plotly.newPlot('plot2', data, layout);
+
+
+
+
+
+
+
     console.log(x)
     console.log(allData[uids[names.indexOf(x)]])
-    // generatePlot(allData[uids[names.indexOf(x)]])
     return false
 }
 
@@ -509,119 +598,3 @@ window.generatePlot = generatePlot
 window.submitToDb = submitToDb
 window.getData = getData
 window.compare = compare
-
-
-
-// a1 = [1,4,9,14]
-// a2 = [1,3,9,16,17]
-// a3 = [2,4,9,12,17]
-// as = [a1,a2,a3]
-
-// a = {0:as[0]}
-// console.log(a)
-// for (let i = 1; i < as.length; i++) {
-//   a_old = structuredClone(a)
-//   for (const [index, sub_arr] of Object.entries(a)) {
-//     a[index + i.toString()] = []
-//   }
-
-//   a3_only = []
-//   as[i].forEach((dt2) => {
-//     overlap = false;
-//     for (const [index, sub_arr] of Object.entries(a_old)) {
-//       sub_arr.every((dt1) => {
-//         if (dt1 == dt2) {
-//           a[index + i.toString()].push(dt1)
-//           a[index].splice(a[index].indexOf(dt2), 1)
-//           overlap = true;
-//           return false
-//         } else return true
-//       })
-//     }
-//     if (!overlap) a3_only.push(dt2)
-//   })
-//   a[i] = a3_only
-// }
-// console.log(a)
-// console.log('aAAAAAAAAAAAAAAAAAAAAAAA')
-
-
-
-
-
-
-
-
-// a1 = [1,4,9,14]
-// a2 = [1,3,9,16,17]
-// a3 = [2,4,9,12,17]
-
-// a = {1:a1}
-
-// a['1' + '2'] = []
-// a[2] = []
-// a2.forEach((dt2) => {
-// 	overlap = false;
-// 	a[1].every((dt1) => {
-//   	if (dt1 == dt2) {
-//     	a['1' + '2'].push(dt1)
-//       a[1].splice(a[1].indexOf(dt2), 1)
-//       overlap = true;
-//       return false
-//     } else return true
-//   })
-//   if (!overlap) a[2].push(dt2)
-// })
-
-// console.log(a)
-
-// a3_only = []
-// for (const [index, sub_arr] of Object.entries(a)) {
-//   a[index + '3'] = []
-//   a3.forEach((dt3) => {
-//     overlap = false;
-//     sub_arr.every((dt1) => {
-//       if (dt1 == dt3) {
-//         a[index + '3'].push(dt1)
-//         a[index].splice(sub_arr.indexOf(dt3), 1)
-//         overlap = true;
-//         return false
-//       } else return true
-//     })
-//     /*  if (!overlap) {
-//       if (3 in a) a[3].push(dt3)
-//       else a[3] = [dt3]
-//     } */
-//     if (!overlap && !a3_only.includes(dt3)) a3_only.push(dt3)
-//   })
-// }
-// a[3] = a3_only
-
-// /* a_old = a.slice()
-// for (const [index, sub_arr] of Object.entries(a)) {
-//   a[index + '3'] = []
-// }
-
-// console.log(a)
-// a3_only = []
-// a3.forEach((dt3) => {
-//   overlap = false;
-//   for (const [index, sub_arr] of Object.entries(a_old)) {
-//     sub_arr.every((dt1) => {
-//       if (dt1 == dt3) {
-//         a[index + '3'].push(dt1)
-//         a[index].splice(sub_arr.indexOf(dt3), 1)
-//         overlap = true;
-//         return false
-//       } else return true
-//     })
-//   }
-//   if (!overlap) {
-//       if (3 in a) a[3].push(dt3)
-//       else a[3] = [dt3]
-//      }
-//   if (!overlap) a3_only.push(dt3)
-// }) */
-
-
-// console.log(a)
