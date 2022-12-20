@@ -68,7 +68,7 @@ function generatePlot(passedData) {
             type: 'scatter',
             hovertemplate: '%{x}' +
             '<br>%{text}',
-            name: '',
+            name: 'Yahentamitsi',
             marker: {
                 size: 12,
                 symbol: 'circle',
@@ -83,7 +83,7 @@ function generatePlot(passedData) {
             type: 'scatter',
             hovertemplate: '%{x}' +
             '<br>%{text}',
-            name: '',
+            name: '251',
             marker: {
                 size: 12,
                 symbol: 'diamond',
@@ -98,7 +98,7 @@ function generatePlot(passedData) {
             type: 'scatter',
             hovertemplate: '%{x}' +
             '<br>%{text}',
-            name: '',
+            name: 'South',
             marker: {
                 size: 12,
                 symbol: 'square',
@@ -176,7 +176,11 @@ function generatePlot(passedData) {
         xaxis: {
             title: 'Date'
         },
-        legend: {"orientation": "h"},
+        showlegend: true,
+        legend: {
+            x: 0,
+            y: -0.2
+        },
         title: 'Dining Hall Swipes'
     };
 
@@ -383,7 +387,7 @@ function compare() {
             type: 'scatter',
             hovertemplate: '%{x}' +
             '<br>%{text}',
-            name: '',
+            name: 'Yahentamitsi'+c,
             marker: {
                 size: 12,
                 symbol: 'circle',
@@ -398,7 +402,7 @@ function compare() {
             type: 'scatter',
             hovertemplate: '%{x}' +
             '<br>%{text}',
-            name: '',
+            name: 'Yahentamitsi'+c,
             marker: {
                 size: 12,
                 symbol: 'diamond',
@@ -413,7 +417,7 @@ function compare() {
             type: 'scatter',
             hovertemplate: '%{x}' +
             '<br>%{text}',
-            name: '',
+            name: 'Yahentamitsi'+c,
             marker: {
                 size: 12,
                 symbol: 'square',
@@ -453,7 +457,11 @@ function compare() {
         xaxis: {
             title: 'Date'
         },
-        legend: {"orientation": "h"},
+        showlegend: true,
+        legend: {
+            x: 0,
+            y: -0.2
+        },
         title: 'Dining Hall Swipes'
     };
 
@@ -482,6 +490,7 @@ function compare() {
         var color = colors[j]
         console.log(color)
         traces['Yahentamitsi'+indices] = {
+            name: 'Yahentamitsi'+indices,
             x: [],
             y: [],
             text: [],
@@ -497,6 +506,7 @@ function compare() {
             }
         }
         traces['251'+indices] = {
+            name: '251'+indices,
             x: [],
             y: [],
             text: [],
@@ -512,6 +522,7 @@ function compare() {
             }
         }
         traces['South'+indices] = {
+            name: 'South'+indices,
             x: [],
             y: [],
             text: [],
@@ -543,25 +554,6 @@ function compare() {
             }
         })
         j++;
-        // for (const [datetime, swipe] of Object.entries(allData[c]['swipes'])) {
-        //     var swipe_loc = swipe['location']
-        //     var date = new Date(datetime.substring(0,10) + 'T00:00:00')
-        //     var time = new Date('2022-12-14T' + datetime.substring(11,19))
-        //     var rough_time = time.getHours() + time.getMinutes()/60 + time.getSeconds()/3600
-        //     if (swipe_loc.includes('Yahentamitsi') || swipe_loc.includes('Yahentamitsu')) {
-        //         traces['Yahentamitsi'+c]['x'].push(date)
-        //         traces['Yahentamitsi'+c]['y'].push(rough_time)
-        //         traces['Yahentamitsi'+c]['text'].push(time.getHours() + ':' + String(time.getMinutes()).padStart(2, '0') + ':' + String(time.getSeconds()).padStart(2, '0'))
-        //     } else if (swipe_loc.includes('251')) {
-        //         traces['251'+c]['x'].push(date)
-        //         traces['251'+c]['y'].push(rough_time)
-        //         traces['251'+c]['text'].push(time.getHours() + ':' + String(time.getMinutes()).padStart(2, '0') + ':' + String(time.getSeconds()).padStart(2, '0'))
-        //     } else if (swipe_loc.includes('SDH')) {
-        //         traces['South'+c]['x'].push(date)
-        //         traces['South'+c]['y'].push(rough_time)
-        //         traces['South'+c]['text'].push(time.getHours() + ':' + String(time.getMinutes()).padStart(2, '0') + ':' + String(time.getSeconds()).padStart(2, '0'))
-        //     }
-        // }
     }
 
     console.log(traces)
@@ -576,7 +568,11 @@ function compare() {
         xaxis: {
             title: 'Date'
         },
-        legend: {"orientation": "h"},
+        showlegend: true,
+        legend: {
+            x: 0.5,
+            y: -1
+        },
         title: 'Dining Hall Swipes'
     };
 
