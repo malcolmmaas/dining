@@ -377,7 +377,7 @@ function compare() {
         'rgba(0, 255, 255, '+1/uid_compares.length+')',
     ]
 
-    var table1Content = `<tr>
+    var table1Content = `<b><tr>
                         <td>Name</td>
                         <td>First swipe</td>
                         <td>Last swipe</td>
@@ -385,7 +385,7 @@ function compare() {
                         <td>251</td>
                         <td>South</td>
                         <td>Yahentamitsi</td>
-                        </tr>`
+                        </tr></b>`
     uid_compares.forEach((c) => {
         var color = colors[uid_compares.indexOf(c)]
         traces['Yahentamitsi'+c] = {
@@ -509,6 +509,39 @@ function compare() {
 
     var j = 0
     var table2Content = ''
+    var row1Content = '<td></td>'
+    var colNames = []
+    uid_compares.forEach((u, i) => {
+        if (i%2 == 0) {
+            row1Content += '<td>' + names[uids.indexOf(u)] + '</td>'
+            colNames.push(u)
+        }
+    })
+    table2Content += '<tr>' + row1Content + '</tr>'
+    uid_compares.forEach((u, i) => {
+        if (i%2 != 0 || i==uid_compares.length-1) {
+            var rowContent = '<td>' + names[uids.indexOf(u)] + '</td>'
+            colNames.forEach((c) => {
+                if (c != u) {
+                    var twoWays = 0
+                    Object.keys(combinations).forEach((key) => {
+                        if (key.includes(i) && key.includes(uid_compares.indexOf(c))) twoWays += combinations[key].length
+                    })
+                    rowContent += '<td>' + twoWays + '</td>'
+                }
+            })
+
+            table2Content += '<tr>' + rowContent + '</tr>'
+        }
+    })
+    // if (uid_compares.length%2 != 0) {
+    //     table2Content += '<tr><td>' + uid_compares[uid_compares.length-1] + '</td></tr>'
+    // }
+    for (const [indices, swipes] of Object.entries(combinations)) {
+    
+    }
+
+
     for (const [indices, swipes] of Object.entries(combinations)) {
     // comparisons.forEach((c, i) => {
         var color = colors[j]
@@ -604,6 +637,7 @@ function compare() {
 
     // uid_compares.forEach()
     document.getElementById('table1').innerHTML = table1Content
+    document.getElementById('table2').innerHTML = table2Content
 
     console.log(x)
     console.log(allData[uids[names.indexOf(x)]])
