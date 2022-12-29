@@ -377,6 +377,15 @@ function compare() {
         'rgba(0, 255, 255, '+1/uid_compares.length+')',
     ]
 
+    var table1Content = `<tr>
+                        <td>Name</td>
+                        <td>First swipe</td>
+                        <td>Last swipe</td>
+                        <td>Total</td>
+                        <td>251</td>
+                        <td>South</td>
+                        <td>Yahentamitsi</td>
+                        </tr>`
     uid_compares.forEach((c) => {
         var color = colors[uid_compares.indexOf(c)]
         traces['Yahentamitsi'+c] = {
@@ -424,6 +433,9 @@ function compare() {
                 color: color
             }
         }
+        var count251 = 0
+        var countSouth = 0
+        var countY = 0
         for (const [datetime, swipe] of Object.entries(allData[c]['swipes'])) {
             var swipe_loc = swipe['location']
             var date = new Date(datetime.substring(0,10) + 'T00:00:00')
@@ -433,16 +445,27 @@ function compare() {
                 traces['Yahentamitsi'+c]['x'].push(date)
                 traces['Yahentamitsi'+c]['y'].push(rough_time)
                 traces['Yahentamitsi'+c]['text'].push(time.getHours() + ':' + String(time.getMinutes()).padStart(2, '0') + ':' + String(time.getSeconds()).padStart(2, '0'))
+                countY++
             } else if (swipe_loc.includes('251')) {
                 traces['251'+c]['x'].push(date)
                 traces['251'+c]['y'].push(rough_time)
                 traces['251'+c]['text'].push(time.getHours() + ':' + String(time.getMinutes()).padStart(2, '0') + ':' + String(time.getSeconds()).padStart(2, '0'))
+                count251++
             } else if (swipe_loc.includes('SDH')) {
                 traces['South'+c]['x'].push(date)
                 traces['South'+c]['y'].push(rough_time)
                 traces['South'+c]['text'].push(time.getHours() + ':' + String(time.getMinutes()).padStart(2, '0') + ':' + String(time.getSeconds()).padStart(2, '0'))
+                countSouth++
             }
         }
+
+        var swipeDates = Object.keys(allData[c]['swipes'])
+        var date1 = new Date(swipeDates[0].substring(0,10) + 'T00:00:00')
+        var date2 = new Date(swipeDates[swipeDates.length-1].substring(0,10) + 'T00:00:00')
+        var date1txt = date1.toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'})
+        var date2txt = date2.toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'})
+        var totalCount = count251+countSouth+countY
+        table1Content += '<tr><td>'+names[uids.indexOf(c)]+'</td><td>'+date1txt+'</td><td>'+date2txt+'</td><td>'+totalCount+'</td><td>'+count251+'</td><td>'+countSouth+'</td><td>'+countY+'</td></tr>'
     })
 
     console.log(traces)
@@ -485,6 +508,7 @@ function compare() {
     ]
 
     var j = 0
+    var table2Content = ''
     for (const [indices, swipes] of Object.entries(combinations)) {
     // comparisons.forEach((c, i) => {
         var color = colors[j]
@@ -578,11 +602,8 @@ function compare() {
 
     Plotly.newPlot('plot2', data, layout);
 
-
-
-
-
-
+    // uid_compares.forEach()
+    document.getElementById('table1').innerHTML = table1Content
 
     console.log(x)
     console.log(allData[uids[names.indexOf(x)]])
