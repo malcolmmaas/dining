@@ -511,37 +511,60 @@ function compare() {
     var table2Content = ''
     var row1Content = '<td></td>'
     var colNames = []
-    uid_compares.forEach((u, i) => {
+    var colHeads = []
+    var rowHeads = []
+    for (let i of uid_compares.keys()) {
         if (i%2 == 0) {
-            row1Content += '<td>' + names[uids.indexOf(u)] + '</td>'
-            colNames.push(u)
+            colHeads.push(i)
         }
+    }
+    for (let i of uid_compares.keys()) {
+        i = uid_compares.length-i-1
+        if (i > 1 && i%2 != 0) {
+            colHeads.push(i)
+        }
+    }
+    console.log(colHeads)
+    colHeads.forEach(i => {
+        var u = uid_compares[i]
+        row1Content += '<td>' + names[uids.indexOf(u)] + '</td>'
+        colNames.push(u)
     })
     table2Content += '<tr>' + row1Content + '</tr>'
-    uid_compares.forEach((u, i) => {
-        if (i%2 != 0 || i==uid_compares.length-1) {
-            var rowContent = '<td>' + names[uids.indexOf(u)] + '</td>'
-            colNames.forEach((c) => {
-                if (c != u) {
-                    var twoWays = 0
-                    Object.keys(combinations).forEach((key) => {
-                        if (key.includes(i) && key.includes(uid_compares.indexOf(c))) twoWays += combinations[key].length
-                    })
-                    rowContent += '<td>' + twoWays + '</td>'
-                }
-            })
 
-            table2Content += '<tr>' + rowContent + '</tr>'
+    for (let i of uid_compares.keys()) {
+        if (i%2 != 0) {
+            rowHeads.push(i)
         }
-    })
-    // if (uid_compares.length%2 != 0) {
-    //     table2Content += '<tr><td>' + uid_compares[uid_compares.length-1] + '</td></tr>'
-    // }
-    for (const [indices, swipes] of Object.entries(combinations)) {
-    
     }
+    for (let i of uid_compares.keys()) {
+        i = uid_compares.length-i-1
+        if (i > 1 && i%2 == 0) {
+            rowHeads.push(i)
+        }
+    }
+    console.log(rowHeads)
+    console.log(uid_compares)
+    console.log(colNames)
+    rowHeads.forEach((i, k) => {
+        var u = uid_compares[i]
+        var rowContent = '<td>' + names[uids.indexOf(u)] + '</td>'
+        colNames.forEach((c, j) => {
+            console.log(k)
+            console.log(j)
+            if (c != u && k+j < colNames.length) {
+                var twoWays = 0
+                Object.keys(combinations).forEach((key) => {
+                    if (key.includes(i) && key.includes(uid_compares.indexOf(c))) twoWays += combinations[key].length
+                })
+                rowContent += '<td>' + twoWays + '</td>'
+            } else rowContent += '<td></td>'
+        })
 
+        table2Content += '<tr>' + rowContent + '</tr>'
+    })
 
+ 
     for (const [indices, swipes] of Object.entries(combinations)) {
     // comparisons.forEach((c, i) => {
         var color = colors[j]
