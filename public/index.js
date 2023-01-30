@@ -1,12 +1,3 @@
-console.log('AAAAAAAAAAA')
-// Import the functions you need from the SDKs you need
-// import { initializeApp } from "firebase/app";
-// import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: "AIzaSyAnS6iMFl2lZRLMkiRuipmais2PLzVjvy4",
     authDomain: "umddining-95442.firebaseapp.com",
@@ -18,17 +9,10 @@ const firebaseConfig = {
     measurementId: "G-CBNYC9N3XX"
 };
 
-// Initialize Firebase
-// const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
-
-
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
 import { getDatabase, ref, child, get, set, update } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 import "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -141,13 +125,8 @@ function generatePlot(passedData) {
     for (const [datetime, swipe] of Object.entries(passedData['swipes'])) {
         var swipe_loc = swipe['location']
         var date = new Date(datetime.substring(0,10) + 'T00:00:00')
-        // console.log(datetime)
-        // console.log(datetime.substring(11,19))
         var time = new Date('2022-12-14T' + datetime.substring(11,19))
         var rough_time = time.getHours() + time.getMinutes()/60 + time.getSeconds()/3600
-        // console.log(rough_time)
-        // console.log(time.getMinutes())
-        // console.log(time.getSeconds())
 
         if (swipe_loc.includes('Yahentamitsi') || swipe_loc.includes('Yahentamitsu')) {
             traces['Yahentamitsi']['x'].push(date)
@@ -331,7 +310,6 @@ function compare() {
                 sub_arr.every((swipe1) => {
                     var dt1 = swipe1['date']
                     var loc1 = swipe1['location']
-                    // console.log(Math.abs(dt1 - dt2))
                     if (Math.abs(dt1 - dt2) < 30000 && loc1 == loc2) {
                         if (dt1 - dt2 < 0) {
                             combinations[index + i.toString()].push(swipe1)
@@ -340,9 +318,6 @@ function compare() {
                             combinations[index + i.toString()].push(swipe2)
                             combinations[index].splice(combinations[index].findIndex(q => q['date'].toString() == swipe1['date'].toString()), 1)
                         }
-                        // console.log(swipe1['date'])
-                        // console.log(structuredClone(combinations[index]))
-                        // console.log(combinations[index].findIndex(q => q['date'].toString() == swipe1['date'].toString()))
                         overlap = true;
                         return false
                     } else return true
@@ -566,7 +541,6 @@ function compare() {
 
  
     for (const [indices, swipes] of Object.entries(combinations)) {
-    // comparisons.forEach((c, i) => {
         var color = colors[j]
         console.log(color)
         traces['Yahentamitsi'+indices] = {
@@ -624,7 +598,6 @@ function compare() {
             date.setHours(0,0,0,0)
             var time = new Date(datetime)
             time.setFullYear(2022, 12, 14)
-            // console.log(swipe_loc)
             var rough_time = time.getHours() + time.getMinutes()/60 + time.getSeconds()/3600
             if (swipe_loc + indices in traces) {
                 traces[swipe_loc + indices]['x'].push(date)
